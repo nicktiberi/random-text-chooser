@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Random Text Chooser</title>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	</head>
+	<body>
+		<div id="app" class="container">
+			<h3>Random Text Chooser</h3>
+
+			<div v-if="isEditing" class="row">
+				<div class="col">
+					<div class="form-group">
+						<textarea v-model="choicesText" class="form-control" rows="10"></textarea>
+					</div>
+
+					<button v-on:click="save" class="btn btn-success">Save</button>
+				</div>
+			</div>
+
+			<div v-if="!isEditing" class="row">
+				<div class="col">
+					<button v-on:click="edit" class="btn btn-secondary">Edit</button>
+
+					<h1 class="text-center" style="margin: 50px 0;">{{choice}}</h1>
+
+					<button v-on:click="choose" class="btn btn-primary btn-lg btn-block">Choose</button>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+		<script>
+		var app = new Vue({
+			el: '#app',
+			data: {
+				choice: '',
+				choicesArr: [],
+				choicesText: '',
+				isEditing: false
+			},
+			methods: {
+				choose: function() {
+					this.choice = this.choicesArr[Math.floor(Math.random() * this.choicesArr.length)];
+				},
+				edit: function() {
+					this.isEditing = true;
+				},
+				save: function() {
+					localStorage.setItem('choicesText', this.choicesText);
+
+					this.choicesArr = this.choicesText.split('\n');
+
+					this.isEditing = false;
+				}
+			},
+			created: function() {
+				var cachedText = localStorage.getItem('choicesText');
+
+				if (cachedText) {
+					this.choicesText = cachedText;
+
+					this.save();
+				}
+			}
+		});
+		</script>
+	</body>
+</html>
